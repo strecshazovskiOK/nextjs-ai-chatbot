@@ -1,3 +1,20 @@
+# Hotel Inventory AI Chatbot
+
+A Next.js application that uses AI to help users find items in a hotel's inventory system. Built with:
+
+- Next.js
+- MongoDB for inventory management
+- OpenAI GPT for natural language processing
+- TypeScript for type safety
+- Tailwind CSS for styling
+
+## Features
+
+- Natural language inventory search
+- Real-time item availability
+- Smart item suggestions
+- Category-based filtering
+
 <a href="https://chat.vercel.ai/">
   <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
   <h1 align="center">Chat SDK</h1>
