@@ -11,6 +11,9 @@ export interface StockItem {
 }
 
 export async function getRelevantItems(userMessage: string) {
+  console.log('\n=== Searching for items ===');
+  console.log('Search term:', userMessage);
+  
   const client = await clientPromise;
   const db = client.db('stock_info');
   const collection = db.collection('item_details');
@@ -25,7 +28,16 @@ export async function getRelevantItems(userMessage: string) {
     ]
   };
 
-  return await collection.find(searchQuery).toArray();
+  const results = await collection.find(searchQuery).toArray();
+  
+  console.log('\n=== Search Results ===');
+  console.log('Found', results.length, 'items:');
+  results.forEach(item => {
+    console.log(`- ${item.code}: ${item.name} (${item.category})`);
+  });
+  console.log('=====================\n');
+
+  return results;
 }
 
 export async function getAllItems() {
