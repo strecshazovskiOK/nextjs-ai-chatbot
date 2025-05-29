@@ -1,0 +1,73 @@
+Soru 1: RAG (Retrieval-Augmented Generation) sistemi kullanmanız gerekecek mi? Yoksa tüm kodları LLM'in context'ine yükleyerek sorulara bu şekilde mi cevap vereceksiniz?
+
+Cevap: Evet, LLM'in context'ine tüm kodları yüklemek yerine özellikle bir RAG sistemi kurmayı tercih ettim. Bunun birkaç kritik sebebi var:
+
+1. Dinamik Veri Yönetimi:
+- Otel envanter sistemi gerçek zamanlı ve sürekli değişen verilerle çalışıyor.
+- Tüm kodları LLM'in context'ine yüklemek, mevcut stok seviyelerine erişim sağlamaz.
+- RAG sayesinde her sorgu için güncel veriyi çekebiliyoruz.
+
+2. Ölçeklenebilirlik:
+- Envanter veritabanı, LLM'in context penceresi limitlerini aşabilecek kadar büyüyebilir.
+- RAG, her sorguda yalnızca ilgili verileri çekmemizi sağlar.
+- Bu yöntem daha verimli ve maliyet açısından daha uygundur.
+
+3. Uygulama Detayları:
+- Envanter verilerini MongoDB’de saklıyorum.
+- Kullanıcı bir soru sorduğunda önce MongoDB üzerinde ilgili veriler aranıyor.
+- Bu veriler AI prompt’una eklenerek daha doğru cevaplar alınması sağlanıyor.
+
+Soru 2: Hangi teknolojileri entegre ettiniz ve bu teknolojileri nasıl kullandığınızı anlatır mısınız?
+
+Cevap: Bu projeyi Vercel AI Chatbot template’ini temel alarak geliştirdim ve kullanım amacına uygun şekilde özelleştirdim. Geliştirme sürecinde çeşitli AI araçlarını da kullandım:
+
+1. Geliştirme Yaklaşımı:
+- Vercel’in Next.js AI Chatbot template’i ile başladım.
+- Mimari kararlar ve uygulama rehberliği için Claude AI kullandım.
+- Prompt mühendisliği ve iyileştirmeler için GPT-4 kullandım.
+- Cursor IDE’nin agent’ı ile kodun yeniden düzenlenmesini ve otele özel hale getirilmesini sağladım.
+
+2. Kullanılan Temel Teknolojiler:
+- Next.js App Router (routing için)
+- AI SDK (LLM entegrasyonu için)
+- shadcn/ui ve Tailwind CSS (UI tasarımı için)
+- TypeScript (tip güvenliği için)
+
+3. Özel Entegrasyonlar:
+- MongoDB (envanter verisi için, template’teki Postgres yerine)
+- Regex tabanlı özel arama sistemi
+- Özelleştirilmiş veri modeli
+- Otel envanterine uygun prompt mühendisliği
+
+4. Kullanılan AI Araçları:
+- Claude AI: Sistem mimarisi ve rehberlik
+- GPT-4: Prompt iyileştirme ve mühendisliği
+- OpenAI API: Chat özelliğinin temelini oluşturdu
+
+Bu Teknolojiler Nasıl Birlikte Çalışıyor?
+
+Kullanıcı mesaj gönderdiğinde:
+
+// 1. Mesaj MongoDB üzerinde işlenir
+const items = await getRelevantItems(userMessage);
+
+// 2. Veriler AI context'ine uygun biçimde formatlanır
+const itemsContext = items.map(item =>
+  `- ${item.code}: ${item.name} (${item.quantity} in stock) - ${item.description}`
+).join('\n');
+
+// 3. AI, bu context ile cevap üretir
+const openaiMessages = [
+  { role: 'system', content: SYSTEM_PROMPT },
+  { role: 'assistant', content: itemsContext },
+  { role: 'user', content: userMessage }
+];
+
+Sonuç:
+
+- Gerçek zamanlı stok doğruluğu sağlanır  
+- Doğal dil ile etkileşim kurulur  
+- Sistem ölçeklenebilir ve sürdürülebilirdir  
+- Veriler güvenli bir şekilde işlenir  
+
+Vercel template’i sağlam bir temel sunarken, AI araçları uygulamayı otele özel ihtiyaçlara göre optimize edip özelleştirmemi sağladı. Bu sayede hızlı ama kaliteli bir geliştirme süreci gerçekleştirdim.
